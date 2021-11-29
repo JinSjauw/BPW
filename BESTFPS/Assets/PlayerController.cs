@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
 public bool CanMove { get; private set; } = true;
 private bool IsSprinting => canSprint && Input.GetKey(sprintKey);
 private bool ShouldJump => Input.GetKeyDown(jumpKey) && characterController.isGrounded;
@@ -61,6 +60,7 @@ private float timer;
 //Sliding Parameters
 
 private Vector3 hitPointNormal;
+private Rigidbody rigidBodyPlayer;
 private bool isSliding 
 {
     get
@@ -86,11 +86,11 @@ private Vector2 currentInput;
 
 private float rotationX = 0;
 
-
 void Awake()
     {
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
+        rigidBodyPlayer = GetComponent<Rigidbody>();
         defaultYPos = playerCamera.transform.localPosition.y;
         
         Cursor.lockState = CursorLockMode.Locked;
@@ -121,10 +121,12 @@ void Awake()
     private void HandleMovementInput() 
     {
         currentInput = new Vector2((isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed) * Input.GetAxis("Vertical"), (isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed) * Input.GetAxis("Horizontal"));
-        
-        float moveDirectionY = moveDirection.y;
-        moveDirection = (transform.TransformDirection(Vector3.forward) * currentInput.x) + (transform.TransformDirection(Vector3.right) * currentInput.y);
-        moveDirection.y = moveDirectionY;
+
+        //rigidBodyPlayer.velocity = new Vector3(currentInput.x, 0, currentInput.y);
+
+        //float moveDirectionY = moveDirection.y;
+        //moveDirection = (transform.TransformDirection(Vector3.forward) * currentInput.x) + (transform.TransformDirection(Vector3.right) * currentInput.y);
+        //moveDirection.y = moveDirectionY;
     }
 
     private void HandleMouseLook() 
@@ -167,6 +169,7 @@ void Awake()
     {
         if (!characterController.isGrounded)
         {
+   
             moveDirection.y -= gravity * Time.deltaTime;
         }
         
@@ -175,7 +178,9 @@ void Awake()
             moveDirection += new Vector3(hitPointNormal.x, -hitPointNormal.y, hitPointNormal.z) * slopeSpeed;
         }
 
-        characterController.Move(moveDirection * Time.deltaTime);
+        //characterController.Move(moveDirection * Time.deltaTime);
+        Debug.Log(moveDirection);
+        rigidBodyPlayer.AddForce(moveDirection * Time.deltaTime);
     }
 
     private IEnumerator CrouchStand()
