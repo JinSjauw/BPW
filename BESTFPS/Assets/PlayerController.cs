@@ -150,7 +150,6 @@ void Awake()
             StartCoroutine(CrouchStand());
         }
     }
-
     private void HandleHeadBob()
     {
         if(!characterController.isGrounded) return;

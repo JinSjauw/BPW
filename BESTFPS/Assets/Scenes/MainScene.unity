@@ -658,7 +658,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 532423342}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.086, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2657,7 +2657,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1328966772}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.1, z: -1.73}
+  m_LocalPosition: {x: 0, y: -1.172, z: -1.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2894,12 +2894,15 @@ MonoBehaviour:
   slopeSpeed: 8
   acceleration: 6
   deceleration: 10
-  jumpPower: 5
+  jumpPower: 3
   gravity: 15
+  shouldJump: 0
   lookSpeedX: 0.3
   lookSpeedY: 0.3
   upperLookLimit: 80
   lowerLookLimit: 80
+  directionVelocity: {x: 0, y: 0, z: 0}
+  wantedVelocity: {x: 0, y: 0, z: 0}
 --- !u!1 &1416803284
 GameObject:
   m_ObjectHideFlags: 0
