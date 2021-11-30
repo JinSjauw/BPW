@@ -5,6 +5,15 @@ using UnityEngine.InputSystem;
 
 public class RigidbodyController : MonoBehaviour
 {
+    private bool isSprinting = false;
+
+    [Header("Functional Options")]
+    [SerializeField] private bool canSprint = true;
+    [SerializeField] private bool canJump = true;
+    [SerializeField] private bool canCrouch = true;
+    [SerializeField] private bool canHeadbob = true;
+    [SerializeField] private bool willSlideOnSlopes = true;
+
     [Header("Movement Parameters")]
     [SerializeField] private float walkSpeed = 5.0f;
     [SerializeField] private float sprintSpeed = 10.0f;
@@ -56,6 +65,14 @@ public class RigidbodyController : MonoBehaviour
         }
     }
 
+    public void Sprinting(InputAction.CallbackContext context) 
+    {
+        if (context.started && canSprint) 
+        {
+            isSprinting = true;
+        }
+    }
+
     public void Fire(InputAction.CallbackContext context) 
     {
         
@@ -76,6 +93,8 @@ public class RigidbodyController : MonoBehaviour
 
     void HandleMove()
     {
+        float moveSpeed = (isSprinting ? sprintSpeed : walkSpeed);
+
         if (directionVelocity == new Vector3(0, 0, 0))
         {
             currentSpeed = currentSpeed - deceleration * Time.fixedDeltaTime;
@@ -86,7 +105,7 @@ public class RigidbodyController : MonoBehaviour
             currentSpeed = currentSpeed + acceleration * Time.fixedDeltaTime;
         }
 
-        currentSpeed = Mathf.Clamp(currentSpeed, 0, walkSpeed);
+        currentSpeed = Mathf.Clamp(currentSpeed, 0, moveSpeed);
         rigbod.velocity = transform.TransformDirection(wantedVelocity) * currentSpeed;
     }
 
