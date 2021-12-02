@@ -5,16 +5,21 @@ using UnityEngine.InputSystem;
 
 public class RigidbodyController : MonoBehaviour
 {
-    [SerializeField] private bool isSprinting = false;
 
     [Header("Functional Options")]
+    [SerializeField] private bool canMove = true;
+    [SerializeField] private bool isMoving;
     [SerializeField] private bool canSprint = true;
+    [SerializeField] private bool isSprinting = false;
     [SerializeField] private bool canJump = true;
     [SerializeField] private bool canCrouch = true;
     [SerializeField] private bool canHeadbob = true;
     [SerializeField] private bool willSlideOnSlopes = true;
 
     [Header("Movement Parameters")]
+    [SerializeField] private Vector3 directionVelocity;
+    [SerializeField] private Vector3 directionSlopeVelocity;
+    [SerializeField] private Vector3 wantedVelocity;
     [SerializeField] private float targetSpeed;
     [SerializeField] private float currentSpeed = 0;
     [SerializeField] private float lastSpeed = 0;
@@ -22,8 +27,7 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField] private float sprintSpeed = 10.0f;
     [SerializeField] private float crouchSpeed = 2.0f;
     [SerializeField] private float slopeSpeed = 8f;
-    [SerializeField] private float acceleration = 3.0f;
-    [SerializeField] private float deceleration = 3.0f;
+    [SerializeField] private float acceleration = 10f;
 
     [Header("Jumping Parameters")]
     [SerializeField] private float jumpPower = 8.0f;
@@ -35,21 +39,58 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField, Range(.01f, .1f)] private float lookSpeedY = 0.05f;
     [SerializeField, Range(1, 180)] private float upperLookLimit = 80.0f;
     [SerializeField, Range(1, 180)] private float lowerLookLimit = 80.0f;
-
-    [SerializeField] private Vector3 directionVelocity, wantedVelocity;
+    
+    [Header("Camera Control")]
     [SerializeField] private Transform playerCamera;
     [SerializeField] private Transform orientation;
 
-    private Rigidbody rigbod;
-    
+    [Header("Ground Detection")]
+    [SerializeReference] LayerMask groundLayer;
+    [SerializeField] float groundDistance = .4f;
+    RaycastHit slopeHit;
+
+    private Rigidbody rigbod;    
+    private float playerHeight;
     private Vector2 mousePosition;
     private float rotationX, rotationY = 0;
+    
+    private bool isGrounded
+    {
+        get
+        {
+            if(Physics.CheckSphere(transform.position - new Vector3(0, 1, 0), groundDistance, groundLayer))
+            {
+                return true;
+            }
+            return false;
+        }
+    }
 
-    // Start is called before the first frame update
+    private bool onSlope
+    {
+        get
+        {
+            if  (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight / 2 + 0.5f))
+            {
+                if(slopeHit.normal != Vector3.up)
+                {
+                    Debug.Log("On Slope");
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+    }
+
     void Awake()
     {
-        //playerCamera = GetComponentInChildren<Camera>();
+        groundLayer = LayerMask.GetMask("Ground");
         rigbod = GetComponent<Rigidbody>();
+        playerHeight = GetComponentInChildren<CapsuleCollider>().height;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -58,6 +99,14 @@ public class RigidbodyController : MonoBehaviour
     {
             Vector2 movement = context.ReadValue<Vector2>();
             directionVelocity = new Vector3(movement.x, directionVelocity.y, movement.y);
+            if(context.performed)
+            {
+                isMoving = true;
+            }else
+            {
+                isMoving = false;
+            }
+
     }
 
     public void Jump(InputAction.CallbackContext context) 
@@ -77,7 +126,6 @@ public class RigidbodyController : MonoBehaviour
         {
             isSprinting = false;
         }
-
     }
 
     public void Fire(InputAction.CallbackContext context) 
@@ -100,25 +148,44 @@ public class RigidbodyController : MonoBehaviour
     void HandleMove()
     {
         targetSpeed = (isSprinting ? sprintSpeed : walkSpeed); 
-        wantedVelocity = orientation.transform.TransformDirection(directionVelocity);
         
         if(directionVelocity == Vector3.zero)
         {
-            currentSpeed = Mathf.Lerp(currentSpeed, 0, acceleration * Time.fixedDeltaTime) ;
+            targetSpeed = 0.0f;
         }
-        else
+        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, acceleration * Time.fixedDeltaTime);
+        currentSpeed = Mathf.Clamp(currentSpeed, 0f, sprintSpeed);
+
+        if(isGrounded && !onSlope)
         {
-            currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, acceleration * Time.fixedDeltaTime);
+            wantedVelocity = orientation.transform.TransformDirection(directionVelocity);
         }
-        
-        currentSpeed = Mathf.Clamp(currentSpeed, 0, sprintSpeed);
+
+        if(onSlope && isGrounded)
+        {
+            Debug.Log("Giving slopeVelocity");
+            directionSlopeVelocity = Vector3.ProjectOnPlane(directionVelocity, slopeHit.normal);
+            wantedVelocity = orientation.transform.TransformDirection(directionSlopeVelocity);
+        }
+
         wantedVelocity = wantedVelocity * currentSpeed;
-        rigbod.velocity = new Vector3(wantedVelocity.x, rigbod.velocity.y, wantedVelocity.z);
+        Vector3 finalVelocity = Vector3.Lerp(rigbod.velocity, wantedVelocity, acceleration * Time.fixedDeltaTime);
+
+        if(isGrounded && !shouldJump)
+        {
+            rigbod.velocity = new Vector3(finalVelocity.x, finalVelocity.y, finalVelocity.z);
+            
+        }else if(!isGrounded && shouldJump)
+        {
+            rigbod.velocity = new Vector3(finalVelocity.x, rigbod.velocity.y, finalVelocity.z);
+        }
+
+        // rigbod.velocity = new Vector3(wantedVelocity.x, rigbod.velocity.y, wantedVelocity.z);
     }
 
     void HandleJump() 
     {
-        if (shouldJump && isGrounded()) 
+        if (shouldJump && isGrounded) 
         {
             Debug.Log("Jumping");
             rigbod.velocity += new Vector3(0, jumpPower, 0);        
@@ -130,22 +197,22 @@ public class RigidbodyController : MonoBehaviour
 
     void HandleGravity() 
     {
-        if(!isGrounded())
+        if(!isGrounded)
         {
             rigbod.velocity -= new Vector3(0, gravity * Time.fixedDeltaTime, 0);
         }   
     }
 
-    bool isGrounded() 
-    {
-        LayerMask groundLayer = LayerMask.GetMask("Ground");
-        Debug.DrawRay(transform.position, Vector3.down, Color.blue);
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.2f, groundLayer))
-        {
-            return true;
-        }
-        return false;
-    }
+    // bool isGrounded() 
+    // {
+    //     if(Physics.CheckSphere(transform.position - new Vector3(0, 1, 0), groundDistance, groundLayer))
+    //     {
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
+
 
     void FixedUpdate() 
     {
