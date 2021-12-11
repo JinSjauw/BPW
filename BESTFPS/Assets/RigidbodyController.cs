@@ -11,8 +11,7 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField] private bool isMoving;
     [SerializeField] private bool canSprint = true;
     [SerializeField] private bool isSprinting = false;
-    [SerializeField] private bool canJump = true;
-    [SerializeField] private bool canCrouch = true;
+    [SerializeField] private bool canCrouch = true;    
     [SerializeField] private bool canHeadbob = true;
     [SerializeField] private bool willSlideOnSlopes = true;
 
@@ -21,18 +20,26 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField] private Vector3 directionSlopeVelocity;
     [SerializeField] private Vector3 wantedVelocity;
     [SerializeField] private float targetSpeed;
-    [SerializeField] private float currentSpeed = 0;
-    [SerializeField] private float lastSpeed = 0;
     [SerializeField] private float walkSpeed = 5.0f;
     [SerializeField] private float sprintSpeed = 10.0f;
-    [SerializeField] private float crouchSpeed = 2.0f;
+    
     [SerializeField] private float slopeSpeed = 8f;
     [SerializeField] private float acceleration = 10f;
-
-    [Header("Jumping Parameters")]
-    [SerializeField] private float jumpPower = 8.0f;
     [SerializeField] private float gravity = 30.0f;
-    [SerializeField] private bool shouldJump = true;
+    
+    [Header("Crouch Parameters")]
+    [SerializeField] private bool isCrouching = false;
+    [SerializeField] private bool inCrouchTransition;
+    [SerializeField] private float crouchSpeed = 2.0f;
+    [SerializeField] private float timeToCrouch = 0.25f;
+    [SerializeField] private float crouchHeight = 0.5f;
+    [SerializeField] private float standingHeight = 2.0f;
+    [SerializeField] private Vector3 crouchingCenter = new Vector3(0, 0.5f, 0);
+    [SerializeField] private Vector3 standingCenter = new Vector3(0, 0, 0);
+
+    [Header("Sliding Parameters")]
+    [SerializeField] private bool isSliding = false;
+    [SerializeField] private float slideSpeed = 8f;
 
     [Header("Look Parameters")]
     [SerializeField, Range(.01f, .1f)] private float lookSpeedX = 0.05f;
@@ -49,8 +56,8 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField] float groundDistance = .4f;
     RaycastHit slopeHit;
 
-    private Rigidbody rigbod;    
-    private float playerHeight;
+    private Rigidbody playerBody;    
+    private CapsuleCollider playerCollider;
     private Vector2 mousePosition;
     private float rotationX, rotationY = 0;
     
@@ -58,7 +65,7 @@ public class RigidbodyController : MonoBehaviour
     {
         get
         {
-            if(Physics.CheckSphere(transform.position - new Vector3(0, 1, 0), groundDistance, groundLayer))
+            if(Physics.CheckSphere(transform.position - new Vector3(0, playerCollider.height/2, 0), groundDistance, groundLayer))
             {
                 return true;
             }
@@ -70,7 +77,7 @@ public class RigidbodyController : MonoBehaviour
     {
         get
         {
-            if  (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight / 2 + 0.5f))
+            if  (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerCollider.height / 2 + 0.5f))
             {
                 if(slopeHit.normal != Vector3.up)
                 {
@@ -89,30 +96,29 @@ public class RigidbodyController : MonoBehaviour
     void Awake()
     {
         groundLayer = LayerMask.GetMask("Ground");
-        rigbod = GetComponent<Rigidbody>();
-        playerHeight = GetComponentInChildren<CapsuleCollider>().height;
+        playerBody = GetComponent<Rigidbody>();
+        playerCollider = GetComponentInChildren<CapsuleCollider>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     public void Move(InputAction.CallbackContext context) 
     {
-            Vector2 movement = context.ReadValue<Vector2>();
-            directionVelocity = new Vector3(movement.x, directionVelocity.y, movement.y);
-            if(context.performed)
-            {
-                isMoving = true;
-            }else
-            {
-                isMoving = false;
-            }
+        Vector2 movement = context.ReadValue<Vector2>();
+        directionVelocity = new Vector3(movement.x, directionVelocity.y, movement.y);
+        if(context.performed)
+        {
+            isMoving = true;
+        }else
+        {
+            isMoving = false;
+        }
 
     }
 
     public void Jump(InputAction.CallbackContext context) 
     {
-        if(context.performed)
-            shouldJump = true;
+
     }
 
     public void Sprinting(InputAction.CallbackContext context) 
@@ -133,6 +139,18 @@ public class RigidbodyController : MonoBehaviour
         
     }
 
+    public void Crouch(InputAction.CallbackContext context)
+    {
+        if(context.performed && !isSprinting)
+        {
+            StartCoroutine(CrouchStand());
+        }else if(context.performed && isSprinting)
+        {
+            isSliding = true;
+            StartCoroutine(CrouchStand());
+        }
+    }
+
     public void MouseLook(InputAction.CallbackContext context) 
     {
         mousePosition = context.ReadValue<Vector2>();
@@ -147,77 +165,54 @@ public class RigidbodyController : MonoBehaviour
 
     void HandleMove()
     {
-        targetSpeed = (isSprinting ? sprintSpeed : walkSpeed); 
+        targetSpeed = (isSliding? slideSpeed : isCrouching ? crouchSpeed : isSprinting ? sprintSpeed : walkSpeed); 
         
-        if(directionVelocity == Vector3.zero)
-        {
-            targetSpeed = 0.0f;
-        }
-        currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, acceleration * Time.fixedDeltaTime);
-        currentSpeed = Mathf.Clamp(currentSpeed, 0f, sprintSpeed);
+        wantedVelocity = orientation.transform.TransformDirection(directionVelocity.normalized) * targetSpeed;
+        playerBody.velocity = Vector3.Lerp(playerBody.velocity, wantedVelocity, acceleration * Time.fixedDeltaTime);
 
-        if(isGrounded && !onSlope)
-        {
-            wantedVelocity = orientation.transform.TransformDirection(directionVelocity);
-        }
-
-        if(onSlope && isGrounded)
-        {
-            Debug.Log("Giving slopeVelocity");
-            directionSlopeVelocity = Vector3.ProjectOnPlane(directionVelocity, slopeHit.normal);
-            wantedVelocity = orientation.transform.TransformDirection(directionSlopeVelocity);
-        }
-
-        wantedVelocity = wantedVelocity * currentSpeed;
-        Vector3 finalVelocity = Vector3.Lerp(rigbod.velocity, wantedVelocity, acceleration * Time.fixedDeltaTime);
-
-        if(isGrounded && !shouldJump)
-        {
-            rigbod.velocity = new Vector3(finalVelocity.x, finalVelocity.y, finalVelocity.z);
-            
-        }else if(!isGrounded && shouldJump)
-        {
-            rigbod.velocity = new Vector3(finalVelocity.x, rigbod.velocity.y, finalVelocity.z);
-        }
-
-        // rigbod.velocity = new Vector3(wantedVelocity.x, rigbod.velocity.y, wantedVelocity.z);
     }
-
-    void HandleJump() 
+    
+     private IEnumerator CrouchStand()
     {
-        if (shouldJump && isGrounded) 
+        if(isCrouching && Physics.Raycast(playerCamera.transform.position, Vector3.up, 1f))
+            yield break;
+
+        inCrouchTransition = true;
+
+        float timeElapsed = 0f;
+        float targetHeight = isCrouching ? standingHeight : crouchHeight;
+        float currentHeight = playerCollider.height;
+        Vector3 targetCenter = isCrouching ? standingCenter : crouchingCenter;
+        Vector3 currentCenter = playerCollider.center;
+
+        while(timeElapsed < timeToCrouch)
         {
-            Debug.Log("Jumping");
-            rigbod.velocity += new Vector3(0, jumpPower, 0);        
-        }else
-        {
-            shouldJump = false;
+            playerCollider.height = Mathf.Lerp(currentHeight, targetHeight, timeElapsed/timeToCrouch);
+            playerCollider.center = Vector3.Lerp(currentCenter, targetCenter, timeElapsed/timeToCrouch);
+            timeElapsed += Time.deltaTime;
+            yield return null;
         }
+
+        playerCollider.height = targetHeight;
+        playerCollider.center = targetCenter;
+
+        isCrouching = !isCrouching;
+
+        inCrouchTransition = false;
     }
 
     void HandleGravity() 
     {
         if(!isGrounded)
         {
-            rigbod.velocity -= new Vector3(0, gravity * Time.fixedDeltaTime, 0);
-        }   
+            playerBody.AddForce(Vector3.down * gravity * 2, ForceMode.Acceleration);
+        } else {
+            wantedVelocity.y = 0;
+        }
     }
-
-    // bool isGrounded() 
-    // {
-    //     if(Physics.CheckSphere(transform.position - new Vector3(0, 1, 0), groundDistance, groundLayer))
-    //     {
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
-
-
     void FixedUpdate() 
     {
         HandleMove();
-        HandleJump();
         HandleGravity();   
     }
 }

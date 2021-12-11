@@ -121,12 +121,6 @@ void Awake()
     private void HandleMovementInput() 
     {
         currentInput = new Vector2((isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed) * Input.GetAxis("Vertical"), (isCrouching ? crouchSpeed : IsSprinting ? sprintSpeed : walkSpeed) * Input.GetAxis("Horizontal"));
-
-        //rigidBodyPlayer.velocity = new Vector3(currentInput.x, 0, currentInput.y);
-
-        //float moveDirectionY = moveDirection.y;
-        //moveDirection = (transform.TransformDirection(Vector3.forward) * currentInput.x) + (transform.TransformDirection(Vector3.right) * currentInput.y);
-        //moveDirection.y = moveDirectionY;
     }
 
     private void HandleMouseLook() 
