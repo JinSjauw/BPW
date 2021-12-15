@@ -57,7 +57,7 @@ public class WeaponManager : MonoBehaviour
 
         isWeaponHeld = true;
         heldWeapon = realList[0].transform.GetComponent<Weapon>();
-        heldWeapon.PickUp(weaponHolder);
+        heldWeapon.PickUp(weaponHolder, playerCamera);
         
     }   
 

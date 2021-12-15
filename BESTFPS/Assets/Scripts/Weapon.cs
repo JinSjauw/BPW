@@ -27,6 +27,7 @@ public class Weapon : MonoBehaviour
     private bool reloading;
     private bool shooting;
     private bool totalAmmo;
+    private Transform playerCamera;
     private Rigidbody weaponRB;
     private SkinnedMeshRenderer[] skinnedMeshes = new SkinnedMeshRenderer[2];
 
@@ -41,11 +42,42 @@ public class Weapon : MonoBehaviour
 
     public void Fire(InputAction.CallbackContext context)
     {
-        bool triggerMode = (myFireMode == FireModes.BoltAction || myFireMode == FireModes.Semi ? context.performed : context.started);
+        bool triggerMode = (myFireMode == FireModes.BoltAction || myFireMode == FireModes.Semi && !shooting && !reloading ? context.performed : context.started);
         Debug.Log("Fire Mode: " + myFireMode + " Context:" + context);
+
     }
 
-    public void PickUp(Transform weaponHolder)
+    public void Reload(InputAction.CallbackContext context)
+    {
+        if(context.performed && !reloading)
+        {
+            StartCoroutine(Reload());
+            Debug.Log("Reloading");
+        }
+    }
+
+    private void Shoot()
+    {
+        //Shoot Projectile
+    }
+
+    private IEnumerator FiringCooldown()
+    {
+        shooting = true;
+        yield return new WaitForSeconds(1f / rateOfFire);
+        shooting = false;
+    }
+
+    private IEnumerator Reload()
+    {
+        reloading = true;
+        yield return new WaitForSeconds(reloadSpeed);
+        reloading = false;
+    }
+
+
+
+    public void PickUp(Transform weaponHolder, Transform cameraPlayer)
     {
         if(held) return;
         Destroy(weaponRB);
@@ -53,6 +85,7 @@ public class Weapon : MonoBehaviour
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         weaponGfx.layer = weaponGfxLayer;
+        playerCamera = cameraPlayer;
         //Turn off MeshCollider for collision
         setColliderMesh(false);
         held = true;
