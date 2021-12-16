@@ -36,7 +36,7 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField, Range(1, 180)] private float upperLookLimit = 80.0f;
     [SerializeField, Range(1, 180)] private float lowerLookLimit = 80.0f;
 
-    [SerializeField] private Vector3 directionVelocity, wantedVelocity;
+    [SerializeField] private Vector3 directionVelocity, currentVelocity, wantedVelocity;
     [SerializeField] private Transform playerCamera;
     [SerializeField] private Transform orientation;
 
@@ -54,40 +54,34 @@ public class RigidbodyController : MonoBehaviour
         Cursor.visible = false;
     }
 
-    public void Move(InputAction.CallbackContext context) 
+    public void OnMove(InputValue context) 
     {
-            Vector2 movement = context.ReadValue<Vector2>();
-            directionVelocity = new Vector3(movement.x, directionVelocity.y, movement.y);
+            Vector2 movement = context.Get<Vector2>();
+            directionVelocity = new Vector3(movement.x, directionVelocity.y, movement.y).normalized;
     }
 
-    public void Jump(InputAction.CallbackContext context) 
+    public void OnJump(InputValue context) 
     {
-        if(context.performed)
+        if(context.isPressed)
             shouldJump = true;
     }
 
-    public void Sprinting(InputAction.CallbackContext context) 
+    public void OnSprint(InputValue context) 
     {
-        if (context.started && canSprint) 
+        Debug.Log(context.isPressed);
+        if (context.isPressed && canSprint) 
         {
             isSprinting = true;
         }
-
-        if(context.canceled)
+        if(!context.isPressed)
         {
             isSprinting = false;
         }
-
-    }
-
-    public void Fire(InputAction.CallbackContext context) 
-    {
         
     }
-
-    public void MouseLook(InputAction.CallbackContext context) 
+    public void OnLook(InputValue context) 
     {
-        mousePosition = context.ReadValue<Vector2>();
+        mousePosition = context.Get<Vector2>();
 
         rotationY += mousePosition.x * lookSpeedX;
         rotationX -= mousePosition.y * lookSpeedY;
@@ -99,7 +93,7 @@ public class RigidbodyController : MonoBehaviour
 
     void HandleMove()
     {
-        targetSpeed = (isSprinting ? sprintSpeed : walkSpeed); 
+        targetSpeed = (isSprinting ? sprintSpeed : walkSpeed);
         wantedVelocity = orientation.transform.TransformDirection(directionVelocity);
         
         if(directionVelocity == Vector3.zero)
@@ -112,7 +106,9 @@ public class RigidbodyController : MonoBehaviour
         }
         
         currentSpeed = Mathf.Clamp(currentSpeed, 0, sprintSpeed);
+
         wantedVelocity = wantedVelocity * currentSpeed;
+
         rigbod.velocity = new Vector3(wantedVelocity.x, rigbod.velocity.y, wantedVelocity.z);
     }
 

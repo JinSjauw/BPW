@@ -25,7 +25,7 @@ public class WeaponManager : MonoBehaviour
         }
     }
 
-    public void PickUpItem(InputAction.CallbackContext context)
+    public void OnPickUp(InputValue context)
     {
         Debug.Log("Picking Up");
         RaycastHit[] hitList = new RaycastHit[256];
@@ -66,7 +66,7 @@ public class WeaponManager : MonoBehaviour
         return Vector3.Distance(playerCamera.position, hit.point == Vector3.zero ? hit.transform.position : hit.point);
     }
 
-      public void DropItem(InputAction.CallbackContext context)
+      public void OnDrop(InputValue context)
     {
         Debug.Log("Dropping");
           if(isWeaponHeld)

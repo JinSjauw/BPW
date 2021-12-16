@@ -40,16 +40,19 @@ public class Weapon : MonoBehaviour
 
     }
 
-    public void Fire(InputAction.CallbackContext context)
+    public void OnFire(InputValue context)
     {
-        bool triggerMode = (myFireMode == FireModes.BoltAction || myFireMode == FireModes.Semi && !shooting && !reloading ? context.performed : context.started);
+        //bool triggerMode = (myFireMode == FireModes.BoltAction || myFireMode == FireModes.Semi && !shooting && !reloading ? context.isPressed : !context.isPressed);
+        if(context.isPressed)
+        {
         Debug.Log("Fire Mode: " + myFireMode + " Context:" + context);
+        }
 
     }
 
-    public void Reload(InputAction.CallbackContext context)
+    public void OnReload(InputValue context)
     {
-        if(context.performed && !reloading)
+        if(context.isPressed && !reloading)
         {
             StartCoroutine(Reload());
             Debug.Log("Reloading");
