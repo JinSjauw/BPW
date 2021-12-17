@@ -31,37 +31,26 @@ public class Weapon : MonoBehaviour
     private Rigidbody weaponRB;
     private SkinnedMeshRenderer[] skinnedMeshes = new SkinnedMeshRenderer[2];
 
-
     private void Start()
     {   
         weaponRB = gameObject.AddComponent<Rigidbody>();
         weaponRB.mass = .1f;
         skinnedMeshes = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
-
     }
 
-    public void OnFire(InputValue context)
+    public void Reload()
     {
-        //bool triggerMode = (myFireMode == FireModes.BoltAction || myFireMode == FireModes.Semi && !shooting && !reloading ? context.isPressed : !context.isPressed);
-        if(context.isPressed)
+        if(!reloading)
         {
-        Debug.Log("Fire Mode: " + myFireMode + " Context:" + context);
-        }
-
-    }
-
-    public void OnReload(InputValue context)
-    {
-        if(context.isPressed && !reloading)
-        {
-            StartCoroutine(Reload());
+            StartCoroutine(ReloadWeapon());
             Debug.Log("Reloading");
         }
     }
 
-    private void Shoot()
+    public void Shoot()
     {
         //Shoot Projectile
+        Debug.Log("Shot");
     }
 
     private IEnumerator FiringCooldown()
@@ -71,14 +60,12 @@ public class Weapon : MonoBehaviour
         shooting = false;
     }
 
-    private IEnumerator Reload()
+    private IEnumerator ReloadWeapon()
     {
         reloading = true;
         yield return new WaitForSeconds(reloadSpeed);
         reloading = false;
     }
-
-
 
     public void PickUp(Transform weaponHolder, Transform cameraPlayer)
     {

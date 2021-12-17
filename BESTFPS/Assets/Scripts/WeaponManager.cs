@@ -15,18 +15,16 @@ public class WeaponManager : MonoBehaviour
 
     private bool isWeaponHeld;
     private Weapon heldWeapon;
+    private WeaponHandler weaponHandler;
 
-    private void Update() {
-        if(isWeaponHeld)
-        {
-            
-        } else {
-
-        }
+    private void Start() 
+    {
+        weaponHandler = GetComponentInChildren<WeaponHandler>();
     }
 
     public void OnPickUp(InputValue context)
     {
+        if(isWeaponHeld) return;
         Debug.Log("Picking Up");
         RaycastHit[] hitList = new RaycastHit[256];
         int hitNumber = Physics.CapsuleCastNonAlloc(playerCamera.position, 
@@ -58,7 +56,7 @@ public class WeaponManager : MonoBehaviour
         isWeaponHeld = true;
         heldWeapon = realList[0].transform.GetComponent<Weapon>();
         heldWeapon.PickUp(weaponHolder, playerCamera);
-        
+        weaponHandler.heldWeapon = heldWeapon;
     }   
 
     private float GetDistanceTo(RaycastHit hit)
@@ -66,7 +64,7 @@ public class WeaponManager : MonoBehaviour
         return Vector3.Distance(playerCamera.position, hit.point == Vector3.zero ? hit.transform.position : hit.point);
     }
 
-      public void OnDrop(InputValue context)
+    public void OnDrop(InputValue context)
     {
         Debug.Log("Dropping");
           if(isWeaponHeld)
@@ -74,6 +72,7 @@ public class WeaponManager : MonoBehaviour
             heldWeapon.Drop(playerCamera);
             heldWeapon = null;
             isWeaponHeld = false;
+            weaponHandler.heldWeapon = heldWeapon;
         }
     }
 

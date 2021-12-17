@@ -23,7 +23,6 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField] private float crouchSpeed = 2.0f;
     [SerializeField] private float slopeSpeed = 8f;
     [SerializeField] private float acceleration = 3.0f;
-    [SerializeField] private float deceleration = 3.0f;
 
     [Header("Jumping Parameters")]
     [SerializeField] private float jumpPower = 8.0f;
@@ -46,7 +45,7 @@ public class RigidbodyController : MonoBehaviour
     private float rotationX, rotationY = 0;
 
     // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
         //playerCamera = GetComponentInChildren<Camera>();
         rigbod = GetComponent<Rigidbody>();
@@ -54,19 +53,19 @@ public class RigidbodyController : MonoBehaviour
         Cursor.visible = false;
     }
 
-    public void OnMove(InputValue context) 
+    private void OnMove(InputValue context) 
     {
             Vector2 movement = context.Get<Vector2>();
             directionVelocity = new Vector3(movement.x, directionVelocity.y, movement.y).normalized;
     }
 
-    public void OnJump(InputValue context) 
+    private void OnJump(InputValue context) 
     {
         if(context.isPressed)
             shouldJump = true;
     }
 
-    public void OnSprint(InputValue context) 
+    private void OnSprint(InputValue context) 
     {
         Debug.Log(context.isPressed);
         if (context.isPressed && canSprint) 
@@ -79,7 +78,7 @@ public class RigidbodyController : MonoBehaviour
         }
         
     }
-    public void OnLook(InputValue context) 
+    private void OnLook(InputValue context) 
     {
         mousePosition = context.Get<Vector2>();
 
