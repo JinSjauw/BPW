@@ -13,9 +13,12 @@ public class WeaponHandler : MonoBehaviour
     {
         if(context.isPressed && weapon != null)
         {
-            weapon.Shoot();
-        }
+            weapon.UpdateState(1);
 
+        }else if (!context.isPressed && weapon != null) 
+        {
+            weapon.UpdateState(0);
+        }
     }
 
     private void OnReload(InputValue context)
