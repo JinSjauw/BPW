@@ -7,7 +7,18 @@ using UnityEngine.InputSystem;
 public class WeaponHandler : MonoBehaviour
 {
     private Weapon weapon;
-    public Weapon heldWeapon{set { weapon = value; }}
+    public Weapon heldWeapon{set { weapon = value; weaponAnimator = weapon.GetComponent<Animator>(); }}
+    private Animator weaponAnimator;
+    private Transform hipPos, adsPos;
+    private bool isAiming;
+    private enum AimMode { HIP, ADS }
+    private AimMode aimMode;
+
+    private void Awake()
+    {
+        hipPos = gameObject.transform.Find("HIP");
+        adsPos = gameObject.transform.Find("ADS");
+    }
 
     private void OnFire(InputValue context)
     {
@@ -28,4 +39,40 @@ public class WeaponHandler : MonoBehaviour
             weapon.Reload();
         }
     }
+
+    private void OnAim(InputValue context) 
+    {
+
+        if(context.isPressed && weapon != null) 
+        {
+            aimMode = AimMode.ADS;
+        }else if(!context.isPressed && weapon != null) 
+        {
+            aimMode = AimMode.HIP;
+        }
+    }
+
+    private void Aim() 
+    {
+        if (weapon == null) return;
+
+        Transform weaponTransform = weapon.transform;
+        if (aimMode == AimMode.ADS) 
+        {
+            weaponAnimator.SetBool("Aiming", true);
+            weapon.transform.position = Vector3.Lerp(weaponTransform.position, adsPos.position, 5f * Time.deltaTime);
+        }else if (aimMode == AimMode.HIP) 
+        {
+            weaponAnimator.SetBool("Aiming", false);
+            weapon.transform.position = Vector3.Lerp(weaponTransform.position, hipPos.position, 5f * Time.deltaTime);
+        }
+
+    }
+
+    private void Update()
+    {
+        Aim();
+    }
+
+
 }
