@@ -3675,7 +3675,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7594f20d0238c374291dd181c625fe66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recoilX: 10
+  recoilX: 20
   recoilY: 2
   recoilZ: 2
   adsRecoilX: 0
@@ -4050,6 +4050,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
+      propertyPath: rateOfFire
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 7592925024979045923, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
       propertyPath: m_Name
       value: Sniper Object
@@ -4247,7 +4251,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 0.05
   far clip plane: 1000
   field of view: 60
   orthographic: 0

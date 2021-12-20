@@ -100,12 +100,22 @@ public class Weapon : MonoBehaviour
             bullet.ShootBullet(muzzleTransform.up * muzzleVelocity);
             //ApplyRecoil
             weaponRecoil.ApplyRecoil();
+            
             currentAmmo--;
             StartCoroutine(FiringCooldown());
             if (myFireMode == FireModes.Semi || myFireMode == FireModes.BoltAction)
             {
+                animator.SetTrigger("Shooting");
                 weaponState = WeaponState.Ready;
             }
+            else 
+            {
+                animator.SetBool("Shooting", true);
+            }
+        }
+        else if(weaponState != WeaponState.Firing)
+        {
+            animator.SetBool("Shooting", false);
         }
     }
 
