@@ -16,10 +16,12 @@ public class WeaponManager : MonoBehaviour
     private bool isWeaponHeld;
     private Weapon heldWeapon;
     private WeaponHandler weaponHandler;
+    private Recoil recoilManager;
 
     private void Start() 
     {
         weaponHandler = GetComponentInChildren<WeaponHandler>();
+        recoilManager = GetComponentInChildren<Recoil>();
     }
 
     public void OnPickUp(InputValue context)
