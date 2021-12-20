@@ -29,22 +29,12 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField] private float gravity = 30.0f;
     [SerializeField] private bool shouldJump = true;
 
-    [Header("Look Parameters")]
-    [SerializeField, Range(.01f, .1f)] private float lookSpeedX = 0.05f;
-    [SerializeField, Range(.01f, .1f)] private float lookSpeedY = 0.05f;
-    [SerializeField, Range(1, 180)] private float upperLookLimit = 80.0f;
-    [SerializeField, Range(1, 180)] private float lowerLookLimit = 80.0f;
-
     [SerializeField] private Vector3 directionVelocity, currentVelocity, wantedVelocity;
-    [SerializeField] private Transform playerCamera;
+    //[SerializeField] private Transform playerCamera;
     [SerializeField] private Transform orientation;
 
     private Rigidbody rigbod;
     
-    private Vector2 mousePosition;
-    private float rotationX, rotationY = 0;
-
-    // Start is called before the first frame update
     private void Awake()
     {
         //playerCamera = GetComponentInChildren<Camera>();
@@ -77,18 +67,6 @@ public class RigidbodyController : MonoBehaviour
         {
             isSprinting = false;
         }
-        
-    }
-    private void OnLook(InputValue context) 
-    {
-        mousePosition = context.Get<Vector2>();
-
-        rotationY += mousePosition.x * lookSpeedX;
-        rotationX -= mousePosition.y * lookSpeedY;
-        rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit);
-
-        playerCamera.transform.localRotation = Quaternion.Euler(rotationX, rotationY, 0);
-        orientation.transform.rotation *= Quaternion.Euler(0, mousePosition.x * lookSpeedX, 0);
     }
 
     void HandleMove()
@@ -104,9 +82,7 @@ public class RigidbodyController : MonoBehaviour
         {
             currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, acceleration * Time.fixedDeltaTime);
         }
-        
         currentSpeed = Mathf.Clamp(currentSpeed, 0, sprintSpeed);
-
         wantedVelocity = wantedVelocity * currentSpeed;
 
         rigbod.velocity = new Vector3(wantedVelocity.x, rigbod.velocity.y, wantedVelocity.z);

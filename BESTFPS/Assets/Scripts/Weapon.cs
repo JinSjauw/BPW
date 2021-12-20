@@ -34,6 +34,8 @@ public class Weapon : MonoBehaviour
     [SerializeField] private Transform muzzleTransform;
     [SerializeField] private GameObject bulletPrefab;
 
+    private Recoil weaponRecoil;
+    private Animator animator;
     private ObjectPool objectPool;
     private Transform playerCamera;
     private Rigidbody weaponRB;
@@ -41,6 +43,7 @@ public class Weapon : MonoBehaviour
 
     private void Start()
     {
+        animator = GetComponent<Animator>();
         objectPool = FindObjectOfType<ObjectPool>();
         weaponRB = gameObject.AddComponent<Rigidbody>();
         weaponRB.mass = .1f;
@@ -51,18 +54,31 @@ public class Weapon : MonoBehaviour
     
     private void Update()
     {   
-            Shoot();
+        Shoot();
     }
-    
+
     public void UpdateState(int i) 
     {
         weaponState = (WeaponState)i;
+    }
+
+    public void Aim(bool state)
+    {
+        animator.SetBool("Aiming", state);
     }
 
     public void Reload()
     {
         if(weaponState != WeaponState.Reloading)
         {
+            string reload = "Reload";
+
+            if(weaponState == WeaponState.Empty) 
+            {
+                reload = "Reload2";
+            }
+
+            animator.SetTrigger(reload);
             StartCoroutine(ReloadWeapon());
             Debug.Log("Reloading");
         }
@@ -81,7 +97,9 @@ public class Weapon : MonoBehaviour
             GameObject bulletObject = objectPool.GetObject(bulletPrefab);
             Bullet bullet = bulletObject.GetComponent<Bullet>();
             bullet.SetBullet(muzzleTransform);
-            bullet.ShootBullet(muzzleTransform.forward * muzzleVelocity);
+            bullet.ShootBullet(muzzleTransform.up * muzzleVelocity);
+            //ApplyRecoil
+            weaponRecoil.ApplyRecoil();
             currentAmmo--;
             StartCoroutine(FiringCooldown());
             if (myFireMode == FireModes.Semi || myFireMode == FireModes.BoltAction)
@@ -101,6 +119,7 @@ public class Weapon : MonoBehaviour
     private IEnumerator ReloadWeapon()
     {
         weaponState = WeaponState.Reloading;
+
         yield return new WaitForSeconds(reloadSpeed);
         currentAmmo = ammoCapacity;
         weaponState = WeaponState.Ready;
@@ -116,6 +135,7 @@ public class Weapon : MonoBehaviour
         weaponGfx.layer = weaponGfxLayer;
         playerCamera = cameraPlayer;
         //Turn off MeshCollider for collision
+        weaponRecoil = FindObjectOfType<Recoil>();
         setColliderMesh(false);
         held = true;
     }
@@ -131,6 +151,7 @@ public class Weapon : MonoBehaviour
         weaponRB.velocity += Vector3.up * throwExtraForce;
         weaponRB.angularVelocity = Random.onUnitSphere * rotationForce;
         weaponGfx.layer = 0;
+        weaponRecoil = null;
         //Turn on MeshCollider for collision
         setColliderMesh(true);
         
@@ -148,6 +169,5 @@ public class Weapon : MonoBehaviour
         {
             skinnedMesh.enabled = !state;
         }
-
     }
 }

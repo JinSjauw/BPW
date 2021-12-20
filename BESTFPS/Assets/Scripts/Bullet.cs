@@ -32,8 +32,9 @@ public class Bullet : MonoBehaviour
     public void SetBullet(Transform muzzleTransform) 
     {
         transform.position = muzzleTransform.position;
-        //transform.forward = muzzleTransform.forward;
-        transform.rotation = muzzleTransform.rotation;
+        transform.up = muzzleTransform.up;
+        //transform.rotation = muzzleTransform.rotation;
+        
     }
 
     private void DetectCollision() 

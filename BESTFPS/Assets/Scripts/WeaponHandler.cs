@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 public class WeaponHandler : MonoBehaviour
 {
     private Weapon weapon;
-    public Weapon heldWeapon{set { weapon = value; weaponAnimator = weapon.GetComponent<Animator>(); }}
+    public Weapon heldWeapon{set { weapon = value; }}
     private Animator weaponAnimator;
     private Transform hipPos, adsPos;
     private bool isAiming;
@@ -59,14 +59,13 @@ public class WeaponHandler : MonoBehaviour
         Transform weaponTransform = weapon.transform;
         if (aimMode == AimMode.ADS) 
         {
-            weaponAnimator.SetBool("Aiming", true);
+            weapon.Aim(true);
             weapon.transform.position = Vector3.Lerp(weaponTransform.position, adsPos.position, 5f * Time.deltaTime);
         }else if (aimMode == AimMode.HIP) 
         {
-            weaponAnimator.SetBool("Aiming", false);
+            weapon.Aim(false);
             weapon.transform.position = Vector3.Lerp(weaponTransform.position, hipPos.position, 5f * Time.deltaTime);
         }
-
     }
 
     private void Update()
