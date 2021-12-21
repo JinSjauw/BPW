@@ -14,7 +14,7 @@ public class MouseLook : MonoBehaviour
     [SerializeField] private Transform playerCamera;
 
     private Vector2 mousePosition;
-    float rotationY, rotationX;
+    public float rotationY, rotationX;
     private void OnLook(InputValue context)
     {
         mousePosition = context.Get<Vector2>();
@@ -27,9 +27,8 @@ public class MouseLook : MonoBehaviour
         orientation.transform.rotation *= Quaternion.Euler(0, mousePosition.x * lookSpeedX, 0);
     }
 
-    private void Update()
+    public Vector2 GetMousePos()
     {
-       // playerCamera.transform.rotation = Quaternion.Euler(rotationX, rotationY, 0);
-       
+        return mousePosition;
     }
 }

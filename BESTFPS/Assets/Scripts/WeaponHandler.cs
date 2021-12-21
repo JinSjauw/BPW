@@ -40,6 +40,19 @@ public class WeaponHandler : MonoBehaviour
         }
     }
 
+    private void OnMove(InputValue context)
+    {
+        if (weapon == null) return;
+        if(context.Get<Vector2>() != Vector2.zero) 
+        {
+            weapon.Animate("Walking", true);
+        }
+        else 
+        {
+            weapon.Animate("Walking", false);
+        }
+    }
+
     private void OnAim(InputValue context) 
     {
 
@@ -59,12 +72,12 @@ public class WeaponHandler : MonoBehaviour
         Transform weaponTransform = weapon.transform;
         if (aimMode == AimMode.ADS) 
         {
-            weapon.Aim(true);
+            weapon.Animate("Aiming", true);
             weapon.transform.position = Vector3.Lerp(weaponTransform.position, adsPos.position, 5f * Time.deltaTime);
             recoilHandler.SetRecoil(weapon.adsRecoil);
         }else if (aimMode == AimMode.HIP) 
         {
-            weapon.Aim(false);
+            weapon.Animate("Aiming", false);
             weapon.transform.position = Vector3.Lerp(weaponTransform.position, hipPos.position, 5f * Time.deltaTime);
             recoilHandler.SetRecoil(weapon.hipRecoil);
         }
@@ -74,6 +87,4 @@ public class WeaponHandler : MonoBehaviour
     {
         Aim();
     }
-
-
 }

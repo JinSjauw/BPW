@@ -61,7 +61,7 @@ public class Weapon : MonoBehaviour
     
     private void Update()
     {   
-        Shoot();
+        Fire();
     }
 
     public void UpdateState(int i) 
@@ -69,9 +69,9 @@ public class Weapon : MonoBehaviour
         weaponState = (WeaponState)i;
     }
 
-    public void Aim(bool state)
+    public void Animate(string name, bool state)
     {
-        animator.SetBool("Aiming", state);
+        animator.SetBool(name, state);
     }
 
     public void Reload()
@@ -91,7 +91,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    private void Shoot()
+    private void Fire()
     {
         if (currentAmmo == 0)
         {
@@ -105,11 +105,10 @@ public class Weapon : MonoBehaviour
             Bullet bullet = bulletObject.GetComponent<Bullet>();
             bullet.SetBullet(muzzleTransform);
             bullet.ShootBullet(muzzleTransform.up * muzzleVelocity);
-            //ApplyRecoil
             weaponRecoil.ApplyRecoil();
-            
             currentAmmo--;
             StartCoroutine(FiringCooldown());
+
             if (myFireMode == FireModes.Semi || myFireMode == FireModes.BoltAction)
             {
                 animator.SetTrigger("Shooting");

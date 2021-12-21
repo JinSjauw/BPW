@@ -511,7 +511,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20812
+  m_Name: pb_Mesh20884
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1148,7 +1148,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20798
+  m_Name: pb_Mesh20864
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1344,7 +1344,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20784
+  m_Name: pb_Mesh20848
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2544,7 +2544,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f3c17a0215984b14abdef7e4c67297f1, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3c17a0215984b14abdef7e4c67297f1, type: 3}
@@ -2929,7 +2929,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20828
+  m_Name: pb_Mesh20914
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3192,6 +3192,8 @@ MonoBehaviour:
   lowerLookLimit: 80
   orientation: {fileID: 563860363}
   playerCamera: {fileID: 563860363}
+  rotationY: 0
+  rotationX: 0
 --- !u!1 &1376733161
 GameObject:
   m_ObjectHideFlags: 0
@@ -3676,15 +3678,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recoil: {x: 0, y: 0, z: 0}
-  snapForce: 2
-  returnSpeed: 3
+  snapForce: 3
+  returnSpeed: 5
 --- !u!43 &2029323385
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh20750
+  m_Name: pb_Mesh20788
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4071,19 +4073,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
       propertyPath: rateOfFire
-      value: 200
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
       propertyPath: adsRecoil.x
-      value: 6
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
       propertyPath: adsRecoil.y
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
       propertyPath: adsRecoil.z
-      value: 2
+      value: 2.3
       objectReference: {fileID: 0}
     - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
       propertyPath: hipRecoil.x
@@ -4264,6 +4266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9045042683491298375}
   - component: {fileID: 173476315132800233}
+  - component: {fileID: 9045042683491298377}
   m_Layer: 0
   m_Name: WeaponHolder
   m_TagString: Untagged
@@ -4271,6 +4274,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &9045042683491298377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9045042683491298376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4470e63211833e043a749208751c3919, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponHolder: {fileID: 0}
+  smooth: 0.6
+  swayMultiplayer: 0.9
 --- !u!20 &9045042683523265706
 Camera:
   m_ObjectHideFlags: 0
