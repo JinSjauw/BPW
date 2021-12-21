@@ -16,6 +16,13 @@ public class Weapon : MonoBehaviour
     [SerializeField] private int ammoCapacity;
     [SerializeField] private float reloadSpeed;
     [SerializeField] private float hitForce;
+
+    [Header("Hip Recoil")]
+    public Vector3 hipRecoil;
+
+    [Header("ADS Recoil")]
+    public Vector3 adsRecoil;
+
     private enum FireModes {BoltAction, Semi, FullAuto};
     [SerializeField] private FireModes myFireMode;
 
@@ -37,8 +44,8 @@ public class Weapon : MonoBehaviour
     private Recoil weaponRecoil;
     private Animator animator;
     private ObjectPool objectPool;
-    private Transform playerCamera;
     private Rigidbody weaponRB;
+    private Transform playerCamera;
     private SkinnedMeshRenderer[] skinnedMeshes = new SkinnedMeshRenderer[2];
 
     private void Start()

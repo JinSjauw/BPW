@@ -7,17 +7,17 @@ using UnityEngine.InputSystem;
 public class WeaponHandler : MonoBehaviour
 {
     private Weapon weapon;
+    private Recoil recoilHandler;
     public Weapon heldWeapon{set { weapon = value; }}
-    private Animator weaponAnimator;
     private Transform hipPos, adsPos;
     private bool isAiming;
     private enum AimMode { HIP, ADS }
     private AimMode aimMode;
-
     private void Awake()
     {
         hipPos = gameObject.transform.Find("HIP");
         adsPos = gameObject.transform.Find("ADS");
+        recoilHandler = GetComponentInParent<Recoil>();
     }
 
     private void OnFire(InputValue context)
@@ -61,10 +61,12 @@ public class WeaponHandler : MonoBehaviour
         {
             weapon.Aim(true);
             weapon.transform.position = Vector3.Lerp(weaponTransform.position, adsPos.position, 5f * Time.deltaTime);
+            recoilHandler.SetRecoil(weapon.adsRecoil);
         }else if (aimMode == AimMode.HIP) 
         {
             weapon.Aim(false);
             weapon.transform.position = Vector3.Lerp(weaponTransform.position, hipPos.position, 5f * Time.deltaTime);
+            recoilHandler.SetRecoil(weapon.hipRecoil);
         }
     }
 

@@ -3675,14 +3675,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7594f20d0238c374291dd181c625fe66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recoilX: 20
-  recoilY: 2
-  recoilZ: 2
-  adsRecoilX: 0
-  adsRecoilY: 0
-  adsRecoilZ: 0
+  recoil: {x: 0, y: 0, z: 0}
   snapForce: 2
-  returnSpeed: 2
+  returnSpeed: 3
 --- !u!43 &2029323385
 Mesh:
   m_ObjectHideFlags: 0
@@ -3949,6 +3944,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 511469589388153923, guid: 5bcf3c5bb222dd64390b167c00a2f050, type: 3}
+      propertyPath: adsRecoil.x
+      value: 2.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 511469589388153923, guid: 5bcf3c5bb222dd64390b167c00a2f050, type: 3}
+      propertyPath: adsRecoil.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 511469589388153923, guid: 5bcf3c5bb222dd64390b167c00a2f050, type: 3}
+      propertyPath: adsRecoil.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 511469589388153923, guid: 5bcf3c5bb222dd64390b167c00a2f050, type: 3}
+      propertyPath: hipRecoil.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 511469589388153923, guid: 5bcf3c5bb222dd64390b167c00a2f050, type: 3}
+      propertyPath: hipRecoil.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 511469589388153923, guid: 5bcf3c5bb222dd64390b167c00a2f050, type: 3}
+      propertyPath: hipRecoil.z
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 511469589388153948, guid: 5bcf3c5bb222dd64390b167c00a2f050, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -4053,6 +4072,30 @@ PrefabInstance:
     - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
       propertyPath: rateOfFire
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
+      propertyPath: adsRecoil.x
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
+      propertyPath: adsRecoil.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
+      propertyPath: adsRecoil.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
+      propertyPath: hipRecoil.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
+      propertyPath: hipRecoil.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7322312881230443376, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
+      propertyPath: hipRecoil.z
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7592925024979045923, guid: fda5a34e0ff66574e9ddb3591a709bff, type: 3}
       propertyPath: m_Name
