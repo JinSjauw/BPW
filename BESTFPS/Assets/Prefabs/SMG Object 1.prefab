@@ -159,6 +159,7 @@ MonoBehaviour:
   weaponGfxLayer: 8
   weaponGfx: {fileID: 1734051749191460496}
   ColliderMesh: {fileID: 511469590315724842}
+  Attachment: {fileID: 0}
   muzzleTransform: {fileID: 8640992085922324481}
   bulletPrefab: {fileID: 1140276702035843337, guid: ed73d9f075539c347b83853f706f7912, type: 3}
   muzzleFlashPrefab: {fileID: 1336949550903370, guid: 4543ab5e3d405ec40a8d4e9aa5165030, type: 3}
@@ -219,7 +220,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &511469590315724847
 Transform:
   m_ObjectHideFlags: 0
@@ -263,7 +264,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7126193129781715291, guid: 9dc5517fd53dccb40b195e1098d5ebb4, type: 3}
+  - {fileID: 2100000, guid: dc41da5b239ace64cbf41e0c741ac436, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -659,7 +660,7 @@ SkinnedMeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1734051749191460496}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -672,7 +673,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7126193129781715291, guid: 9dc5517fd53dccb40b195e1098d5ebb4, type: 3}
+  - {fileID: 2100000, guid: dc41da5b239ace64cbf41e0c741ac436, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1284,7 +1285,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7126193129781715291, guid: 9dc5517fd53dccb40b195e1098d5ebb4, type: 3}
+  - {fileID: 2100000, guid: dc41da5b239ace64cbf41e0c741ac436, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

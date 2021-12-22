@@ -37,6 +37,7 @@ public class Weapon : MonoBehaviour
     public int weaponGfxLayer;
     public GameObject weaponGfx;
     public GameObject ColliderMesh;
+    public GameObject Attachment;
 
     [SerializeField] private Transform muzzleTransform;
     [SerializeField] private GameObject bulletPrefab;
@@ -116,7 +117,7 @@ public class Weapon : MonoBehaviour
             //Get the bullet from the pool/Make a pool for bullet if not present
             GameObject bulletObject = objectPool.GetObject(bulletPrefab);
             Bullet bullet = bulletObject.GetComponent<Bullet>();
-            bullet.ShootBullet(muzzleTransform.up * muzzleVelocity, muzzleTransform);
+            bullet.ShootBullet(muzzleTransform.right * muzzleVelocity, muzzleTransform);
 
             //Get muzzleFlash from object pool/Make a pool if not present
             GameObject muzzleFlashObject = objectPool.GetObject(muzzleFlashPrefab);
@@ -132,18 +133,23 @@ public class Weapon : MonoBehaviour
             if (myFireMode == FireModes.Semi || myFireMode == FireModes.BoltAction)
             {
                 animator.SetTrigger("Shooting");
+                animator.SetBool("Shooting 0", true);
+
                 weaponState = WeaponState.Ready;
             }
             else 
             {
                 animator.SetBool("Shooting", true);
+
             }
         }
         else if(weaponState != WeaponState.Firing)
         {
             animator.SetBool("Shooting", false);
+            animator.SetBool("Shooting 0", false);
+
         }
-        
+
     }
 
     private IEnumerator FiringCooldown()
@@ -200,7 +206,11 @@ public class Weapon : MonoBehaviour
     {
         ColliderMesh.GetComponent<MeshCollider>().enabled = state;
         ColliderMesh.GetComponent<MeshRenderer>().enabled = state;
-        
+
+        if(Attachment != null) 
+        {
+            Attachment.SetActive(!state);
+        }
         //Set the skinned meshes.
         foreach(SkinnedMeshRenderer skinnedMesh in skinnedMeshes)
         {

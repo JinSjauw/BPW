@@ -18,7 +18,6 @@ public class Bullet : MonoBehaviour
         bulletBody = GetComponent<Rigidbody>();
         enviromentLayer = LayerMask.GetMask("Enviroment");
     }
-
     private void OnEnable()
     {
         StartCoroutine(TimeLife());
@@ -28,7 +27,7 @@ public class Bullet : MonoBehaviour
     {
         bulletBody.velocity = bulletVelocity;
         transform.position = muzzleTransform.position;
-        transform.up = muzzleTransform.up;
+        transform.forward = muzzleTransform.right;
     }
 
     private void DetectCollision() 
