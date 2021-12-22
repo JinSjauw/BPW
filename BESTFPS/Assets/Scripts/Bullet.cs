@@ -24,17 +24,11 @@ public class Bullet : MonoBehaviour
         StartCoroutine(TimeLife());
     }
 
-    public void ShootBullet(Vector3 bulletVelocity) 
+    public void ShootBullet(Vector3 bulletVelocity, Transform muzzleTransform) 
     {
         bulletBody.velocity = bulletVelocity;
-    }
-
-    public void SetBullet(Transform muzzleTransform) 
-    {
         transform.position = muzzleTransform.position;
         transform.up = muzzleTransform.up;
-        //transform.rotation = muzzleTransform.rotation;
-        
     }
 
     private void DetectCollision() 
@@ -71,11 +65,7 @@ public class Bullet : MonoBehaviour
     }
     private void Disable() 
     {
-        this.gameObject.SetActive(false);
-    }
-    private void OnDisable()
-    {
-        if (objectPool != null) 
+        if (objectPool != null)
         {
             objectPool.ReturnGameObject(this.gameObject);
         }

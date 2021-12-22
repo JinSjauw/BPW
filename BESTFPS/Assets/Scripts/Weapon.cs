@@ -40,7 +40,10 @@ public class Weapon : MonoBehaviour
 
     [SerializeField] private Transform muzzleTransform;
     [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private GameObject muzzleFlashPrefab;
 
+
+    private WeaponAudio weaponAudio;
     private Recoil weaponRecoil;
     private Animator animator;
     private ObjectPool objectPool;
@@ -50,12 +53,14 @@ public class Weapon : MonoBehaviour
 
     private void Start()
     {
+        weaponAudio = GetComponent<WeaponAudio>();
         animator = GetComponent<Animator>();
         objectPool = FindObjectOfType<ObjectPool>();
         weaponRB = gameObject.AddComponent<Rigidbody>();
         weaponRB.mass = .1f;
         skinnedMeshes = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
         weaponState = WeaponState.Ready;
+        //muzzleFlash = GetComponentInChildren<ParticleSystem>();
         currentAmmo = ammoCapacity;
     }
     
@@ -78,11 +83,15 @@ public class Weapon : MonoBehaviour
     {
         if(weaponState != WeaponState.Reloading)
         {
-            string reload = "Reload";
+            string reload;
 
-            if(weaponState == WeaponState.Empty) 
+            if (weaponState == WeaponState.Empty) 
             {
                 reload = "Reload2";
+                AudioManager.PlaySound(weaponAudio.getClip(WeaponAudio.Sound.ReloadEmpty), transform.position);
+            } else {
+                reload = "Reload";
+                AudioManager.PlaySound(weaponAudio.getClip(WeaponAudio.Sound.Reload), transform.position);
             }
 
             animator.SetTrigger(reload);
@@ -101,13 +110,24 @@ public class Weapon : MonoBehaviour
         if (weaponState == WeaponState.Firing && allowedToFire) 
         {
             Debug.Log("Shot");
+
+            AudioManager.PlaySound(weaponAudio.getClip(WeaponAudio.Sound.Shoot), transform.position);
+
+            //Get the bullet from the pool/Make a pool for bullet if not present
             GameObject bulletObject = objectPool.GetObject(bulletPrefab);
             Bullet bullet = bulletObject.GetComponent<Bullet>();
-            bullet.SetBullet(muzzleTransform);
-            bullet.ShootBullet(muzzleTransform.up * muzzleVelocity);
+            bullet.ShootBullet(muzzleTransform.up * muzzleVelocity, muzzleTransform);
+
+            //Get muzzleFlash from object pool/Make a pool if not present
+            GameObject muzzleFlashObject = objectPool.GetObject(muzzleFlashPrefab);
+            MuzzleFlash muzzleFlash = muzzleFlashObject.GetComponent<MuzzleFlash>();
+            muzzleFlash.setMuzzle(muzzleTransform);
+
             weaponRecoil.ApplyRecoil();
             currentAmmo--;
+
             StartCoroutine(FiringCooldown());
+            //StartCoroutine(MuzzleFlash());
 
             if (myFireMode == FireModes.Semi || myFireMode == FireModes.BoltAction)
             {
@@ -123,6 +143,7 @@ public class Weapon : MonoBehaviour
         {
             animator.SetBool("Shooting", false);
         }
+        
     }
 
     private IEnumerator FiringCooldown()

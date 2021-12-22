@@ -49,7 +49,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 168461283534999463}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -898,6 +898,7 @@ Transform:
   m_Children:
   - {fileID: 8942947286510725534}
   - {fileID: 1380451484808708421}
+  - {fileID: 4456992723038569187}
   m_Father: {fileID: 7336249411742616922}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -1.4691474, y: 179.84404, z: 178.03874}
@@ -997,6 +998,37 @@ Transform:
   m_Father: {fileID: 2985510664875043925}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -1.7845825, y: 2.3061168, z: 9.901146}
+--- !u!1 &3847284345522467102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4456992723038569187}
+  m_Layer: 0
+  m_Name: muzzleTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4456992723038569187
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3847284345522467102}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.00005, y: 0.01783, z: -0.00013}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1920655021627838953}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3891451842432647482
 GameObject:
   m_ObjectHideFlags: 0
@@ -1613,7 +1645,7 @@ SkinnedMeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6920502272523060265}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1780,6 +1812,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7067464722424829081}
   - component: {fileID: 7322312881230443376}
+  - component: {fileID: 5640291595795082095}
   - component: {fileID: 7322312881230443382}
   m_Layer: 7
   m_Name: Sniper Object 1
@@ -1827,12 +1860,28 @@ MonoBehaviour:
   ammoCapacity: 20
   reloadSpeed: 2
   hitForce: 0
+  hipRecoil: {x: 0, y: 0, z: 0}
+  adsRecoil: {x: 0, y: 0, z: 0}
   myFireMode: 1
   weaponGfxLayer: 8
   weaponGfx: {fileID: 6920502272523060265}
   ColliderMesh: {fileID: 168461283534999463}
-  muzzleTransform: {fileID: 1920655021627838953}
+  muzzleTransform: {fileID: 4456992723038569187}
   bulletPrefab: {fileID: 1140276702035843337, guid: ed73d9f075539c347b83853f706f7912, type: 3}
+  muzzleFlash: {fileID: 1336949550903370, guid: 4543ab5e3d405ec40a8d4e9aa5165030, type: 3}
+--- !u!114 &5640291595795082095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7592925024979045923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01b8664b6583fb74e8b242af760b3495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundArray: []
 --- !u!95 &7322312881230443382
 Animator:
   serializedVersion: 4

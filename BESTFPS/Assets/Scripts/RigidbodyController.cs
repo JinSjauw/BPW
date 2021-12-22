@@ -107,7 +107,6 @@ public class RigidbodyController : MonoBehaviour
             rigbod.velocity -= new Vector3(0, gravity * Time.fixedDeltaTime, 0);
         }   
     }
-
     bool isGrounded() 
     {
         LayerMask groundLayer = LayerMask.GetMask("Enviroment");

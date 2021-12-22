@@ -53,13 +53,25 @@ public class WeaponHandler : MonoBehaviour
         }
     }
 
+    private void OnSprint(InputValue context) 
+    {
+        if (weapon == null) return;
+        if (context.isPressed) 
+        {
+            weapon.Animate("Sprinting", true);
+        }else 
+        {
+            weapon.Animate("Sprinting", false);
+        }
+    }
+
     private void OnAim(InputValue context) 
     {
-
-        if(context.isPressed && weapon != null) 
+        if (weapon == null) return;
+        if(context.isPressed) 
         {
             aimMode = AimMode.ADS;
-        }else if(!context.isPressed && weapon != null) 
+        }else if(!context.isPressed) 
         {
             aimMode = AimMode.HIP;
         }
