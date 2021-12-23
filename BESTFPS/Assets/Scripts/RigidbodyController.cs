@@ -51,14 +51,14 @@ public class RigidbodyController : MonoBehaviour
 
     private void OnJump(InputValue context) 
     {
-        Debug.Log("Detected Jump Input");
+        //Debug.Log("Detected Jump Input");
         if(context.isPressed)
             shouldJump = true;
     }
 
     private void OnSprint(InputValue context) 
     {
-        Debug.Log(context.isPressed);
+        //Debug.Log(context.isPressed);
         if (context.isPressed && canSprint) 
         {
             isSprinting = true;
@@ -92,7 +92,7 @@ public class RigidbodyController : MonoBehaviour
     {
         if (shouldJump && isGrounded()) 
         {
-            Debug.Log("Jumping");
+            //Debug.Log("Jumping");
             rigbod.velocity += new Vector3(0, jumpPower, 0);        
         }else
         {
@@ -109,7 +109,7 @@ public class RigidbodyController : MonoBehaviour
     }
     bool isGrounded() 
     {
-        LayerMask groundLayer = LayerMask.GetMask("Enviroment");
+        LayerMask groundLayer = LayerMask.GetMask("DamageAble");
         Debug.DrawRay(transform.position, Vector3.down, Color.blue);
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.2f, groundLayer))
         {

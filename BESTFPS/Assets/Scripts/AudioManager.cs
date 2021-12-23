@@ -6,6 +6,7 @@ public static class AudioManager
 {
     private static GameObject oneShotObject;
     private static AudioSource oneShotAudioSource;
+    private static AudioSource continousAudioSource;
 
 
     public static void PlaySound(AudioClip audioClip) 
@@ -17,6 +18,19 @@ public static class AudioManager
             oneShotObject = new GameObject("One Shot Sound");
             oneShotAudioSource = oneShotObject.AddComponent<AudioSource>();
         }
+        oneShotAudioSource.PlayOneShot(audioClip);
+    }
+    public static void PlaySoundOnce(AudioClip audioClip, Vector3 position) 
+    {
+        if (audioClip == null) return;
+
+        if (oneShotObject == null) 
+        {
+            oneShotObject = new GameObject("One Shot Sound");
+            oneShotAudioSource = oneShotObject.AddComponent<AudioSource>();
+        }
+        oneShotObject.transform.position = position;
+        oneShotAudioSource.Stop();
         oneShotAudioSource.PlayOneShot(audioClip);
        
     }

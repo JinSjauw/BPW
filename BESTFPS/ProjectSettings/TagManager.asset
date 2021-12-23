@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enviroment
+  - WayPoint
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -12,10 +14,10 @@ TagManager:
   - 
   - Water
   - UI
-  - Enviroment
+  - DamageAble
   - Weapons
   - WeaponGFX
-  - 
+  - ScopeCrosshair
   - 
   - 
   - 
