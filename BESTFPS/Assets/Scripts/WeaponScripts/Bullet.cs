@@ -59,12 +59,12 @@ public class Bullet : MonoBehaviour
             switch (tag)
             {
                 case "Player":
-                    //Debug.Log("Hit Player");
+                    Debug.Log("Hit Player");
                     damageable = hit.collider.GetComponentInParent<IDamageAble>();
                     damageable.TakeDamage(bulletDamage);
                     break;
                 case "Enemy":
-                    //Debug.Log("Hit Enemy");
+                    Debug.Log("Hit Enemy");
                     BulletImpact(hit, ImpactFleshPrefab);
 
                     damageable = hit.collider.GetComponent<IDamageAble>();

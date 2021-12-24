@@ -10,13 +10,14 @@ public class IdleState : AbstractFSMState
 
     public override bool EnterState()
     {
-        //Debug.Log("Entered State? in IdleState: " + EnteredState);
         EnteredState = base.EnterState();
-       // Debug.Log("Entered State? in IdleState: " + EnteredState);
 
         if (EnteredState) 
         {
-            //Debug.Log("Entered IDLE State: " + executingNPC.name);
+            executingNPC.Animate("isMoving", false);
+            executingNPC.Animate("isShooting", false);
+            navMeshAgent.isStopped = true;
+
             totalTime = 0f;
         }
         return EnteredState;
@@ -32,7 +33,6 @@ public class IdleState : AbstractFSMState
         if (EnteredState && executionState == ExecutionState.ACTIVE) 
         {
             totalTime += Time.deltaTime;
-            //Debug.Log("Updating IDLE State: " + totalTime);
 
             if(totalTime >= idleTime) 
             {
@@ -43,8 +43,6 @@ public class IdleState : AbstractFSMState
     public override bool ExitState()
     {
         base.ExitState();
-
-        //Debug.Log("Exiting IDLE State");
         return true;
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent), typeof(FiniteStateMachine))]
+[RequireComponent(typeof(NavMeshAgent), typeof(FiniteStateMachine), typeof(FieldOfView))]
 [RequireComponent(typeof(IdleState), typeof(PatrolState))]
 [RequireComponent(typeof(ChaseState), typeof(AttackState))]
 
@@ -16,9 +16,11 @@ public class NPCController : MonoBehaviour, IDamageAble
     NavMeshAgent navMeshAgent;
     FiniteStateMachine finiteStateMachine;
     FieldOfView fieldOfView;
+    Animator animator;
 
     [Header("NPC Stats")]
-    [SerializeField] int hp;
+    [SerializeField] int maxHP;
+    int hp;
     [SerializeField] float aggroTimer = 5f;
     private float timer;
 
@@ -27,14 +29,20 @@ public class NPCController : MonoBehaviour, IDamageAble
         navMeshAgent = GetComponent<NavMeshAgent>();
         finiteStateMachine = GetComponent<FiniteStateMachine>();
         fieldOfView = GetComponent<FieldOfView>();
-
-        SetHP(100);
+        animator = GetComponentInChildren<Animator>();
+        timer = aggroTimer;
+        SetHP(maxHP);
     }
 
     public void Initialize()
     {
         finiteStateMachine.EnterState(FSMState.IDLE);
         fieldOfView.OnPlayerSpotted += PlayerSpotted;
+    }
+
+    public void Animate(string name, bool state) 
+    {
+        animator.SetBool(name, state);
     }
 
     public void Update()
@@ -74,7 +82,18 @@ public class NPCController : MonoBehaviour, IDamageAble
 
     public void Die()
     {
-        Destroy(this.gameObject);
+        //Destroy(this.gameObject);
+
+        animator.enabled = false;
+        finiteStateMachine.EnterState(FSMState.DEAD);
+        //this.enabled = false;
+    }
+
+    public void Spawn() 
+    {
+        animator.enabled = true;
+        SetHP(maxHP);
+        finiteStateMachine.EnterState(FSMState.IDLE);
     }
 
     public ConnectedWayPoint[] PatrolPoints 

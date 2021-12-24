@@ -7,7 +7,8 @@ public class AttackState : AbstractFSMState
     private GameObject playerObject;
     private ObjectPool objectPool;
 
-    [SerializeField] GameObject bulletPrefab, muzzleTransform;
+    [SerializeField] GameObject bulletPrefab, muzzleTransform, muzzleFlashPrefab;
+    [SerializeField] AudioClip shootSound;
     [SerializeField] private float fireRate, attackDelay, muzzleVelocity;
     private bool canShoot, canAttack = true;
 
@@ -44,15 +45,22 @@ public class AttackState : AbstractFSMState
         {
             if (executingNPC.seesPlayer && executingFSM.currentState.stateType == FSMState.ATTACK)
             {
-                transform.LookAt(playerObject.transform.position);
+                Vector3 point = playerObject.transform.position;
+                muzzleTransform.transform.LookAt(point);
+                //point.y = 0.0f; 
+                transform.LookAt(point);
+                executingNPC.Animate("isMoving", false);
                 if (canAttack)
                 {
                     StartCoroutine(Attack());
                 }
+                executingNPC.Animate("isShooting", false);
+
             }
             else if (!executingNPC.seesPlayer && executingFSM.currentState.stateType != FSMState.CHASE)
             {
                 navMeshAgent.isStopped = false;
+                executingNPC.Animate("isShooting", false);
                 executingFSM.EnterState(FSMState.CHASE);
             }
         }
@@ -61,9 +69,17 @@ public class AttackState : AbstractFSMState
     {
         //Debug.Log(objectPool);
         if (!canShoot) return;
+        executingNPC.Animate("isShooting", true);
         GameObject bulletObject = objectPool.GetObject(bulletPrefab);
         Bullet bullet = bulletObject.GetComponent<Bullet>();
-        bullet.EnemyShootBullet((playerObject.transform.position - transform.position).normalized * muzzleVelocity, muzzleTransform.transform);
+        bullet.EnemyShootBullet((playerObject.transform.position - muzzleTransform.transform.position).normalized * muzzleVelocity, muzzleTransform.transform);
+
+        GameObject muzzleFlashObject = objectPool.GetObject(muzzleFlashPrefab);
+        MuzzleFlash muzzleFlash = muzzleFlashObject.GetComponent<MuzzleFlash>();
+        muzzleFlash.setEnemyMuzzle(muzzleTransform.transform);
+
+        AudioManager.PlaySound(shootSound, muzzleTransform.transform.position);
+
         StartCoroutine(FiringCooldown());
     }
 
@@ -80,4 +96,11 @@ public class AttackState : AbstractFSMState
         yield return new WaitForSeconds(60 / fireRate);
         canShoot = true;
     }
+
+    public override bool ExitState()
+    {
+        executingNPC.Animate("isShooting", false);
+        return base.ExitState();
+    }
+
 }

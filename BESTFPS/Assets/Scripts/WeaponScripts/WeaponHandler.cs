@@ -24,11 +24,11 @@ public class WeaponHandler : MonoBehaviour
     {
         if(context.isPressed && weapon != null)
         {
-            weapon.UpdateState(1);
+            weapon.ShootState(1);
 
         }else if (!context.isPressed && weapon != null) 
         {
-            weapon.UpdateState(0);
+            weapon.ShootState(0);
         }
     }
 

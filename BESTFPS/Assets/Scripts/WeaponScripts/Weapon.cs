@@ -23,7 +23,7 @@ public class Weapon : MonoBehaviour
     [Header("ADS Recoil")]
     public Vector3 adsRecoil;
 
-    private enum FireModes {BoltAction, Semi, FullAuto};
+    private enum FireModes { BoltAction, Semi, FullAuto };
     [SerializeField] private FireModes myFireMode;
 
     //Weapon States
@@ -64,15 +64,18 @@ public class Weapon : MonoBehaviour
         //muzzleFlash = GetComponentInChildren<ParticleSystem>();
         currentAmmo = ammoCapacity;
     }
-    
+
     private void Update()
-    {   
+    {
         Fire();
     }
 
-    public void UpdateState(int i) 
+    public void ShootState(int i)
     {
-        weaponState = (WeaponState)i;
+        if (weaponState == WeaponState.Ready || weaponState == WeaponState.Firing)
+        {
+            weaponState = (WeaponState)i;
+        }
     }
 
     public void Animate(string name, bool state)

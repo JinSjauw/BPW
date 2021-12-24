@@ -5,7 +5,6 @@ using UnityEngine;
 public class ChaseState : AbstractFSMState
 {
     public GameObject playerObject;
-    [SerializeField] Material chaseMaterial, patrolMaterial;
     [SerializeField] int totalEnemies = 15;
     [SerializeField] float alertRadius = 7f;
     LayerMask enemyLayer;
@@ -33,8 +32,6 @@ public class ChaseState : AbstractFSMState
             if (playerObject != null)
             {
                 navMeshAgent.isStopped = false;
-                SetDestination(playerObject.transform.position);
-                gameObject.GetComponent<MeshRenderer>().material = chaseMaterial;
                 AlertAllies();
             }
             else 
@@ -43,6 +40,7 @@ public class ChaseState : AbstractFSMState
             }
             EnteredState = true;
         }
+        //executingNPC.Animate("isMoving", true);
         return EnteredState;
     }
 
@@ -58,15 +56,16 @@ public class ChaseState : AbstractFSMState
                     Debug.Log("Entering ATTACK state from CHASE");
                     executingFSM.EnterState(FSMState.ATTACK);
                 }
-                transform.LookAt(transform.forward);
-                SetDestination(playerObject.transform.position);
+                else 
+                {
+                    SetDestination(playerObject.transform.position);
+                }
             }
         }
     }
 
     public override bool ExitState()
     {
-        gameObject.GetComponent<MeshRenderer>().material = patrolMaterial;
         return base.ExitState();
     }
 
@@ -87,7 +86,7 @@ public class ChaseState : AbstractFSMState
 
     private void SetDestination(Vector3 destination) 
     {
-        transform.LookAt(playerObject.transform);
+        executingNPC.Animate("isMoving", true);
         navMeshAgent.SetDestination(destination);
     }
 }

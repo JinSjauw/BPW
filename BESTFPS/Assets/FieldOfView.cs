@@ -16,8 +16,8 @@ public class FieldOfView : MonoBehaviour
     [Range(0, 360)]
     public float angleDefault;
 
-
     public GameObject playerObject;
+    public Transform eyePosition;
 
     public LayerMask targetMask;
     public LayerMask obstructionMask;
@@ -57,18 +57,18 @@ public class FieldOfView : MonoBehaviour
 
     private void FieldOfViewCheck()
     {
-        Collider[] rangeChecks = Physics.OverlapSphere(transform.position, radius, targetMask);
+        Collider[] rangeChecks = Physics.OverlapSphere(eyePosition.position, radius, targetMask);
 
         if (rangeChecks.Length != 0)
         {
             Transform target = rangeChecks[0].transform;
-            Vector3 directionToTarget = (target.position - transform.position).normalized;
+            Vector3 directionToTarget = (target.position - eyePosition.position).normalized;
 
-            if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2f)
+            if (Vector3.Angle(eyePosition.forward, directionToTarget) < angle / 2f)
             {
-                float distanceToTarget = Vector3.Distance(transform.position, target.position);
+                float distanceToTarget = Vector3.Distance(eyePosition.position, target.position);
 
-                if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstructionMask))
+                if (!Physics.Raycast(eyePosition.position, directionToTarget, distanceToTarget, obstructionMask))
                 {
                     //Debug.Log("Can See Player");
                     playerSeen = true;

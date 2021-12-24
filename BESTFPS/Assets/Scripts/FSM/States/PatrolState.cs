@@ -9,17 +9,10 @@ public class PatrolState : AbstractFSMState
     private ConnectedWayPoint[] patrolPoints;
     private int patrolPointIndex;
 
-    //private GameObject playerObject;
     public override void OnEnable()
     {
         base.OnEnable();
         stateType = FSMState.PATROL;
-        //Debug.Log("Agent Name: " + executingNPC.name);
-    }
-
-    private void Awake()
-    {
-        //playerObject = FindObjectOfType<RigidbodyController>().gameObject;
     }
 
     public override bool EnterState()
@@ -29,10 +22,10 @@ public class PatrolState : AbstractFSMState
             patrolPointIndex = -1;
 
             EnteredState = false;
+
             //Get all the patrolpoints
             patrolPoints = executingNPC.PatrolPoints;
-            //Debug.Log("AGENT NAME: " + executingNPC.name);
-
+    
             if(patrolPoints == null || patrolPoints.Length == 0) 
             {   
                 Debug.LogError("PatrolState: Failed to get patrolpoints from npc");
@@ -50,7 +43,7 @@ public class PatrolState : AbstractFSMState
                     //Wraps around the end of the array back to index 0
                     patrolPointIndex = (patrolPointIndex + 1) % patrolPoints.Length;
                 }
-
+                navMeshAgent.isStopped = false;
                 SetDestination(patrolPoints[patrolPointIndex]);
                 EnteredState = true;
             }
@@ -60,10 +53,8 @@ public class PatrolState : AbstractFSMState
 
     public override void UpdateState()
     {
-        //TODO 
         if (EnteredState && executionState == ExecutionState.ACTIVE)
         {
-            //Debug.Log("Patrol Point Index: " + patrolPointIndex);
             if (executingNPC.seesPlayer) 
             {
                 executingFSM.EnterState(FSMState.CHASE);
@@ -79,7 +70,7 @@ public class PatrolState : AbstractFSMState
     {
         if (navMeshAgent != null && destinationPoint != null) 
         {
-            //Debug.Log("Agent Name: " + navMeshAgent.name + " Moving to: " + destinationPoint);
+            executingNPC.Animate("isMoving", true);
             navMeshAgent.SetDestination(destinationPoint.transform.position);
         }
     }

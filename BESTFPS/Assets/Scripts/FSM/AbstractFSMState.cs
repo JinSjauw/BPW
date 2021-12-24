@@ -42,7 +42,7 @@ public abstract class AbstractFSMState : MonoBehaviour
         executionState = ExecutionState.ACTIVE;
         successNavMesh = (navMeshAgent != null);
         successNPC = (executingNPC != null);
-        Debug.Log("Agent: " + navMeshAgent.name + " Entering State" + successNavMesh + " : " + successNPC);
+        Debug.Log("Agent: " + navMeshAgent.name + " Entering State: " + successNavMesh + " : " + successNPC);
 
         return successNPC & successNavMesh;
     }
