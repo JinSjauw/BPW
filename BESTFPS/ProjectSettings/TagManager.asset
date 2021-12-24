@@ -18,9 +18,9 @@ TagManager:
   - Weapons
   - WeaponGFX
   - ScopeCrosshair
-  - 
-  - 
-  - 
+  - BulletHole
+  - Player
+  - Enemy
   - 
   - 
   - 
@@ -43,4 +43,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BulletHole
+    uniqueID: 3152761213
     locked: 0

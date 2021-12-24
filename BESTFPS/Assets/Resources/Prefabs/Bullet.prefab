@@ -99,7 +99,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: -7204647971529134275, guid: a94586b87deee444399369dc06d79b20, type: 3}
+  m_Mesh: {fileID: -7204647971529134275, guid: acbb66c6a0095df4e8656b728e5d563a, type: 3}
 --- !u!54 &221373814075630685
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -114,7 +114,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!114 &221373814075630682
 MonoBehaviour:
@@ -129,5 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 1
-  ImpactPrefab: {fileID: 553251882824821092, guid: 209c12653ac0ccd42b29ff2dad8c4d5e, type: 3}
+  ImpactEnviromentPrefab: {fileID: 553251882824821092, guid: 209c12653ac0ccd42b29ff2dad8c4d5e, type: 3}
+  ImpactFleshPrefab: {fileID: 8471204976263832274, guid: b9ea797dd9434334d8ae7aadf960fb41, type: 3}
   impactSound: {fileID: 8300000, guid: 60d020e641fa4d14bab1a14b88115e50, type: 3}
+  bulletDamage: 90

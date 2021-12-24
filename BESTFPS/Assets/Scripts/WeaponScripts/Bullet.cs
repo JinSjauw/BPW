@@ -5,8 +5,10 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private float lifeTime = 1f;
-    [SerializeField] private GameObject ImpactPrefab;
+    [SerializeField] private GameObject ImpactEnviromentPrefab;
+    [SerializeField] private GameObject ImpactFleshPrefab;
     [SerializeField] private AudioClip impactSound;
+    [SerializeField] private int bulletDamage;
 
     private Rigidbody bulletBody;
     private ObjectPool objectPool;
@@ -18,7 +20,6 @@ public class Bullet : MonoBehaviour
     {
         objectPool = FindObjectOfType<ObjectPool>();
         bulletBody = GetComponent<Rigidbody>();
-        DamageAbleLayer = LayerMask.GetMask("DamageAble");
 
     }
     private void OnEnable()
@@ -32,65 +33,60 @@ public class Bullet : MonoBehaviour
     {
         transform.position = muzzleTransform.position;
         transform.forward = muzzleTransform.right;
-        DetectCollision(muzzleTransform);
         bulletBody.velocity = bulletVelocity;
+        DamageAbleLayer = LayerMask.GetMask("DamageAble", "Enemy");
+        DetectCollision(muzzleTransform.position);
+    }
+    public void EnemyShootBullet(Vector3 bulletVelocity, Transform muzzleTransform)
+    {
+        transform.position = muzzleTransform.position;
+        transform.forward = muzzleTransform.forward;
+        bulletBody.velocity = bulletVelocity;
+        DamageAbleLayer = LayerMask.GetMask("DamageAble", "Player");
+        DetectCollision(muzzleTransform.position);
     }
 
-    private void DetectCollision(Transform muzzleTransform) 
+    private void DetectCollision(Vector3 muzzlePosition) 
     {
         RaycastHit hit;
-        if (Physics.Raycast(muzzleTransform.position, transform.forward, out hit, bulletBody.velocity.magnitude, DamageAbleLayer))
+        if (Physics.Raycast(muzzlePosition, transform.forward, out hit, bulletBody.velocity.magnitude, DamageAbleLayer))
         {
             Debug.DrawLine(transform.position, hit.point, Color.green);
-            Debug.Log("LineCasting");
+            //Debug.Log("LineCasting");
             string tag = hit.collider.tag;
+            //Debug.Log("Name Collider: " + tag);
+            IDamageAble damageable;
             switch (tag)
             {
+                case "Player":
+                    //Debug.Log("Hit Player");
+                    damageable = hit.collider.GetComponentInParent<IDamageAble>();
+                    damageable.TakeDamage(bulletDamage);
+                    break;
                 case "Enemy":
-                    Debug.Log("Hit Enemy");
-                    //Disable();
+                    //Debug.Log("Hit Enemy");
+                    BulletImpact(hit, ImpactFleshPrefab);
+
+                    damageable = hit.collider.GetComponent<IDamageAble>();
+                    damageable.TakeDamage(bulletDamage);
+
                     break;
                 case "Enviroment":
-                    Debug.Log("Hit Enviroment");
-                    BulletImpact(hit.point);
-                    //Disable();
+                    //Debug.Log("Hit Enviroment");
+                    BulletImpact(hit, ImpactEnviromentPrefab);
                     break;
             }
         }
-     /*   if(lastPosition != Vector3.zero) 
-        {
-            RaycastHit hit;
-            if(Physics.Linecast(currentPosition, lastPosition, out hit, DamageAbleLayer))
-            {
-                Debug.Log("LineCasting");
-                string tag = hit.collider.tag;
-                switch (tag) 
-                {
-                    case "Enemy" :
-                        Debug.Log("Hit Enemy");
-                        Disable();
-                        break;
-                    case "Enviroment" :
-                        Debug.Log("Hit Enviroment");
-                        BulletImpact(hit.point);
-                        Disable();
-                        break;
-                }
-            }   
-        }
-        else 
-        { 
-            lastPosition = currentPosition;
-        }*/
     }
 
-    private void BulletImpact(Vector3 impactPoint) 
-    {
-        GameObject impactObject = objectPool.GetObject(ImpactPrefab);
-        impactObject.transform.position = impactPoint;
-        impactObject.transform.forward = -transform.forward;
+    private void BulletImpact(RaycastHit impact, GameObject impactPrefab) 
+    {   
 
-        ImpactPrefab.SetActive(true);
+        GameObject impactObject = objectPool.GetObject(impactPrefab);
+        impactObject.transform.position = impact.point;
+        impactObject.transform.forward = impact.normal;
+
+        ImpactFleshPrefab.SetActive(true);
         AudioManager.PlaySoundOnce(impactSound, impactObject.transform.position);
         
     }
@@ -115,9 +111,4 @@ public class Bullet : MonoBehaviour
             objectPool.ReturnGameObject(this.gameObject);
         }
     }
-    private void FixedUpdate()
-    {
-        //DetectCollision();
-    }
-
 }

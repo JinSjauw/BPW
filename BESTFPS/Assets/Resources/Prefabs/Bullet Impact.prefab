@@ -14188,7 +14188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3120520521006038076}
   - component: {fileID: 3120520521006038211}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bullet Hole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
