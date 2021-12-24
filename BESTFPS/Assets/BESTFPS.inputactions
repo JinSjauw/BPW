@@ -87,12 +87,12 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Lean",
-                    "type": "Value",
-                    "id": "faad5137-5195-43ee-82ce-e18bee2512ed",
-                    "expectedControlType": "Vector2",
+                    "name": "Throw",
+                    "type": "Button",
+                    "id": "6df47687-b2ed-45eb-848d-24fca8445765",
+                    "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press(behavior=2)",
                     "initialStateCheck": true
                 }
             ],
@@ -384,59 +384,15 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "2D Vector",
-                    "id": "4dc9900c-e564-4f4e-ae12-c42f1932c92c",
-                    "path": "2DVector",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Lean",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "up",
-                    "id": "e563ec0e-b3dc-433b-80fc-4951a14792b6",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Lean",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "down",
-                    "id": "ee23f4c6-4708-4cc8-8df5-226eb1e71941",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Lean",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "left",
-                    "id": "440ea963-b11a-46e2-90a7-1fbf765c0149",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Lean",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "right",
-                    "id": "83cdfb2d-d142-4bb6-8643-f8a50484b5e9",
+                    "name": "",
+                    "id": "694f83ae-2e81-49a2-ba19-b898aa084727",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Lean",
+                    "action": "Throw",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         },
