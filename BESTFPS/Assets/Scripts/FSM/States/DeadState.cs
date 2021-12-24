@@ -7,6 +7,7 @@ public class DeadState : AbstractFSMState
     [SerializeField] private float respawnTimer = 10f;
     private float timer;
 
+    [SerializeField] private Transform[] spawnPoints;
     private Collider mainCollider;
     private Collider[] allColliders;
 
@@ -60,7 +61,11 @@ public class DeadState : AbstractFSMState
             if(timer < 0f) 
             {
                 DoRagdoll(false);
+
+                Transform spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length - 1)].transform;
+                executingNPC.transform.position = spawnPoint.position;
                 executingNPC.Spawn();
+                
                 timer = respawnTimer;
             }
         }

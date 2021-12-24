@@ -10,6 +10,7 @@ public class AttackState : AbstractFSMState
     [SerializeField] GameObject bulletPrefab, muzzleTransform, muzzleFlashPrefab;
     [SerializeField] AudioClip shootSound;
     [SerializeField] private float fireRate, attackDelay, muzzleVelocity;
+    [SerializeField] private int weaponDamage;
     private bool canShoot, canAttack = true;
 
     public override void OnEnable()
@@ -23,6 +24,8 @@ public class AttackState : AbstractFSMState
         objectPool = FindObjectOfType<ObjectPool>();
         playerObject = FindObjectOfType<RigidbodyController>().gameObject;
         canShoot = true;
+        fireRate = Random.Range(300f, 800f);
+        attackDelay = Random.Range(0.2f, 1f);
     }
 
     public override bool EnterState()
@@ -72,13 +75,14 @@ public class AttackState : AbstractFSMState
         executingNPC.Animate("isShooting", true);
         GameObject bulletObject = objectPool.GetObject(bulletPrefab);
         Bullet bullet = bulletObject.GetComponent<Bullet>();
+        bullet.setDamage(weaponDamage);
         bullet.EnemyShootBullet((playerObject.transform.position - muzzleTransform.transform.position).normalized * muzzleVelocity, muzzleTransform.transform);
 
         GameObject muzzleFlashObject = objectPool.GetObject(muzzleFlashPrefab);
         MuzzleFlash muzzleFlash = muzzleFlashObject.GetComponent<MuzzleFlash>();
         muzzleFlash.setEnemyMuzzle(muzzleTransform.transform);
 
-        AudioManager.PlaySound(shootSound, muzzleTransform.transform.position);
+        AudioManager.PlaySoundOnce(shootSound, muzzleTransform.transform.position);
 
         StartCoroutine(FiringCooldown());
     }
@@ -86,7 +90,7 @@ public class AttackState : AbstractFSMState
     private IEnumerator Attack() 
     {
         canAttack = false;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(attackDelay);
         canAttack = true;
         Shoot();
     }

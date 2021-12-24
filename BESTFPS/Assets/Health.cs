@@ -34,5 +34,6 @@ public class Health : MonoBehaviour, IDamageAble
             Die(); return; 
         }
         totalHP -= damage;
+        Debug.Log("Health: " + totalHP);
     }
 }

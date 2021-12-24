@@ -28,7 +28,10 @@ public class Bullet : MonoBehaviour
         //Debug.Log("Current Position: " + currentPosition + " transform positon: " + transform.position);
         StartCoroutine(TimeLife());
     }
-
+    public void setDamage(int damage) 
+    {
+        bulletDamage = damage;
+    }
     public void ShootBullet(Vector3 bulletVelocity, Transform muzzleTransform) 
     {
         transform.position = muzzleTransform.position;
@@ -81,16 +84,13 @@ public class Bullet : MonoBehaviour
 
     private void BulletImpact(RaycastHit impact, GameObject impactPrefab) 
     {   
-
         GameObject impactObject = objectPool.GetObject(impactPrefab);
         impactObject.transform.position = impact.point;
         impactObject.transform.forward = impact.normal;
 
         ImpactFleshPrefab.SetActive(true);
-        AudioManager.PlaySoundOnce(impactSound, impactObject.transform.position);
-        
+        AudioManager.PlaySoundOnce(impactSound, impactObject.transform.position);   
     }
-
     private IEnumerator TimeLife() 
     {
         yield return new WaitForSeconds(lifeTime);

@@ -15,7 +15,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private int rateOfFire;
     [SerializeField] private int ammoCapacity;
     [SerializeField] private float reloadSpeed;
-    [SerializeField] private float hitForce;
+    [SerializeField] private int weaponDamage;
 
     [Header("Hip Recoil")]
     public Vector3 hipRecoil;
@@ -120,6 +120,7 @@ public class Weapon : MonoBehaviour
             //Get the bullet from the pool/Make a pool for bullet if not present
             GameObject bulletObject = objectPool.GetObject(bulletPrefab);
             Bullet bullet = bulletObject.GetComponent<Bullet>();
+            bullet.setDamage(weaponDamage);
             bullet.ShootBullet(muzzleTransform.right * muzzleVelocity, muzzleTransform);
 
             //Get muzzleFlash from object pool/Make a pool if not present
